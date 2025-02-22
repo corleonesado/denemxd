@@ -37,6 +37,12 @@
         .options button:hover {
             background: #666;
         }
+        .result-image {
+            margin-top: 20px;
+            width: 200px;
+            height: auto;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -44,6 +50,7 @@
         <h2>Gayrimeşru Alem Quizi</h2>
         <div class="question" id="question"></div>
         <div class="options" id="options"></div>
+        <div id="result-container"></div>
     </div>
     
     <script>
@@ -58,6 +65,16 @@
         ];
         
         const characters = ["Halil Ay", "Yoldaş Dalton", "Can Dalton", "Ferhat Mardin", "Sinan Memi", "Ramazan Baygara", "Timocan", "Barış Boyun"];
+        const characterImages = {
+            "Halil Ay": "https://github.com/corleonesado/denemxd/blob/main/images-6.jpeg?raw=true",
+            "Yoldaş Dalton": "https://github.com/corleonesado/denemxd/blob/main/images-2.jpeg?raw=true",
+            "Can Dalton": "https://github.com/corleonesado/denemxd/blob/main/0x0-daltonlar-lideri-can-daltonun-iadesi-istendi-1732190872772.webp?raw=true",
+            "Ferhat Mardin": "https://github.com/corleonesado/denemxd/blob/main/images-7.jpeg?raw=true",
+            "Sinan Memi": "https://github.com/corleonesado/denemxd/blob/main/images-5.jpeg?raw=true",
+            "Ramazan Baygara": "https://github.com/corleonesado/denemxd/blob/main/images-3.jpeg?raw=true",
+            "Timocan": "https://github.com/corleonesado/denemxd/blob/main/images-4.jpeg?raw=true",
+            "Barış Boyun": "https://raw.githubusercontent.com/corleonesado/denemxd/refs/heads/main/aw872704-11-Tlil.webp"
+        };
         
         let scores = new Array(characters.length).fill(0);
         let currentQuestion = 0;
@@ -77,16 +94,29 @@
         }
 
         function selectAnswer(index) {
-            questions[currentQuestion].scores[index].forEach(i => scores[i]++);
+            questions[currentQuestion].scores[index].forEach(i => {
+                if (i !== undefined) {
+                    scores[i]++;
+                }
+            });
             currentQuestion++;
             loadQuestion();
         }
 
         function showResult() {
             let maxScore = Math.max(...scores);
-            let bestMatch = characters[scores.indexOf(maxScore)];
-            document.getElementById("question").innerText = `Quiz sona erdi! En çok benzediğiniz kişi: ${bestMatch}`;
+            let bestMatches = characters.filter((_, i) => scores[i] === maxScore);
+            
+            let resultHTML = `<p>Quiz sona erdi! En çok benzediğiniz kişiler: ${bestMatches.join(", ")}</p>`;
+            bestMatches.forEach(name => {
+                if (characterImages[name]) {
+                    resultHTML += `<img class='result-image' src='${characterImages[name]}' alt='${name}'>`;
+                }
+            });
+            
+            document.getElementById("question").innerText = "";
             document.getElementById("options").innerHTML = "";
+            document.getElementById("result-container").innerHTML = resultHTML;
         }
 
         loadQuestion();
