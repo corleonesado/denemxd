@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gayrimeşru Alem Quizi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1e1e1e;
+            color: white;
+            padding: 20px;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: auto;
+            background: #333;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .options button:hover {
+            background: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2>Gayrimeşru Alem Quizi</h2>
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
+    </div>
+    
+    <script>
+        const questions = [
+            { q: "Cesur musunuz?", options: ["Evet", "Hayır"], scores: [[0,1,2,3,5,7], []] },
+            { q: "Berbere ne sıklıkla gidersiniz?", options: ["Haftada bir", "2 Haftada bir", "3 Haftada bir", "Ayda bir", "Hiç"], scores: [[1], [2,7], [0,6], [5], [3,4]] },
+            { q: "Gaddar mısınız?", options: ["Evet", "Hayır"], scores: [[1,2,3,4,5,7], [0,6]] },
+            { q: "Kedi mi Köpek mi?", options: ["Kedi", "Köpek"], scores: [[1,2,3,4,7,6], [0,5]] },
+            { q: "Batı ülkeleri mi Doğu ülkeleri mi?", options: ["Batı", "Doğu"], scores: [[0,4,5,7], [1,2,3,6]] },
+            { q: "Kırsal kesim mi şehir mi?", options: ["Kırsal", "Şehir"], scores: [[0,3,4,7], [1,2,5,6]] },
+            { q: "Keşke yaşamıyor olsaydım diyor musunuz?", options: ["Evet", "Hayır"], scores: [[0,1], [2,3,4,5,6,7]] }
+        ];
+        
+        const characters = ["Halil Ay", "Yoldaş Dalton", "Can Dalton", "Ferhat Mardin", "Sinan Memi", "Ramazan Baygara", "Timocan", "Barış Boyun"];
+        
+        let scores = new Array(characters.length).fill(0);
+        let currentQuestion = 0;
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResult();
+                return;
+            }
+            
+            document.getElementById("question").innerText = questions[currentQuestion].q;
+            let optionsHTML = "";
+            questions[currentQuestion].options.forEach((opt, index) => {
+                optionsHTML += `<button onclick="selectAnswer(${index})">${opt}</button>`;
+            });
+            document.getElementById("options").innerHTML = optionsHTML;
+        }
+
+        function selectAnswer(index) {
+            questions[currentQuestion].scores[index].forEach(i => scores[i]++);
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showResult() {
+            let maxScore = Math.max(...scores);
+            let bestMatch = characters[scores.indexOf(maxScore)];
+            document.getElementById("question").innerText = `Quiz sona erdi! En çok benzediğiniz kişi: ${bestMatch}`;
+            document.getElementById("options").innerHTML = "";
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
